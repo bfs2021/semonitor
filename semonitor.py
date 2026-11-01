@@ -30,6 +30,7 @@ UPDATE_SIZE = 0x80000
 # global variables
 threadLock = threading.Lock()  # lock to synchronize reads and writes
 masterEvent = threading.Event()  # event to signal RS485 master release
+eod_event = threading.Event()  # end-of-day event of the inverter received
 
 
 # program termination
@@ -75,6 +76,8 @@ def readData(args, mode, state, dataFile, recFile, outFile):
                     if args.xerror:
                         raise
                 se.logutils.setState(state, "threadLock", False)
+                if eod_event.is_set():  # exit, the main thread terminates
+                    break
     # all finished
     if args.updatefile:  # write the firmware update file
         writeUpdate(updateBuf, args.updatefile)
@@ -135,6 +138,17 @@ def processMsg(msg, args, mode, state, dataFile, recFile, outFile, updateBuf):
                     msgSeq, toAddr, fromAddr, replyFunction, replyData
                 )
                 se.msg.sendMsg(dataFile, msg, recFile)
+        # the data is written and acknowledged, so the end-of-day event can end the run
+        if (
+            args.nadir == se.env.NADIR_EVENT
+            and function == se.commands.PROT_CMD_SERVER_POST_DATA
+            and data
+            and any(
+                e.get("Type") == 0 for e in msgData.get("events", {}).values()
+            )
+        ):
+            logger.info("nadir event received")
+            eod_event.set()
 
 
 # write firmware image to file
@@ -244,10 +258,14 @@ def startMaster(args):
     logger.info("starting %s", MASTER_THREAD_NAME)
 
 
-# wait until keyboard interrupt
-def block(state):
+# wait until keyboard interrupt (or the nadir, if enabled)
+def block(state, nadir_epoch=None):
     try:
         while True:
+            if nadir_epoch is not None and time.time() >= nadir_epoch:
+                terminate(0, "Nadir reached, exiting")
+            if eod_event.is_set():
+                terminate(0, "Nadir event received, exiting")
             time.sleep(1)
     except KeyboardInterrupt:
         se.logutils.dumpState(state)
@@ -268,6 +286,25 @@ def nextSeq():
     return seq
 
 
+# Return the UNIX epoch timestamp for the next occurrence of a given
+# local time (nadir), whether that is later today or tomorrow. Now is a UNIX
+# epoch timestamp as well, and defaults to the current time.
+def next_nadir_epoch(nadir, now=None):
+    now = time.time() if now is None else now
+    today = time.localtime(now)
+
+    # Build the day from the calendar date, not by adding 24h to the instant:
+    # a day is 23 or 25 hours long when the clocks change. mktime() takes care
+    # of that, and of a day past the end of the month.
+    def at(day):
+        return time.mktime(
+            (*today[:2], day, nadir.hour, nadir.minute, nadir.second, 0, 0, -1)
+        )
+
+    target = at(today.tm_mday)
+    return target if target > now else at(today.tm_mday + 1)
+
+
 if __name__ == "__main__":
     # create the state variables with timestamps
     state = {}
@@ -279,6 +316,18 @@ if __name__ == "__main__":
 
     # get the command line arguments and run mode
     (args, mode) = se.env.getArgs()
+
+    # calculate the nadir once, only when enabled
+    nadir_epoch = None
+    if args.nadir == se.env.NADIR_EVENT:
+        logger.info("nadir on inverter end-of-day event")
+    elif args.nadir is not None:
+        nadir_epoch = next_nadir_epoch(args.nadir)
+        logger.info(
+            "nadir at epoch %d (%s)",
+            nadir_epoch,
+            time.strftime("%Y-%m-%dT%H:%M:%S", time.localtime(nadir_epoch)),
+        )
 
     # open the specified data source
     logger.info("opening %s", args.datasource)
@@ -317,7 +366,7 @@ if __name__ == "__main__":
         if args.master:  # send RS485 master commands
             startMaster(args=(state, dataFile, recFile, args.slaves))
         # wait for termination
-        block(state)
+        block(state, nadir_epoch)
 
     # cleanup
     se.files.closeData(dataFile)
