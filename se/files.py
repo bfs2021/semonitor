@@ -3,10 +3,13 @@
 import logging
 import os
 import sys
+import time
 
 import serial
 
 logger = logging.getLogger(__name__)
+DATE_TOKEN = "__date__"
+DATETIME_TOKEN = "__datetime__"
 
 
 # open serial device
@@ -30,6 +33,10 @@ def closeData(dataFile):
 # open the output file if it is specified
 def openOutFile(fileName, writeMode="wb"):
     if fileName:
+        fileName = fileName.replace(DATE_TOKEN, time.strftime("%Y%m%d"))
+        fileName = fileName.replace(
+            DATETIME_TOKEN, time.strftime("%Y%m%d%H%M%S")
+        )
         dirName = os.path.dirname(fileName)
         if dirName:
             os.makedirs(dirName, exist_ok=True)
