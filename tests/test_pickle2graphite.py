@@ -1,6 +1,5 @@
 import io
 import json
-from pathlib import Path
 import pickle
 import runpy
 import socket
@@ -8,6 +7,7 @@ import struct
 import sys
 import time
 import types
+from pathlib import Path
 from typing import ClassVar
 
 import pytest
