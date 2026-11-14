@@ -100,7 +100,6 @@ words:
   - mday
   - mktime
   - setdefaulttimeout
-  - syspath
   - ttyname
   - tzset
   - tzutc
@@ -118,6 +117,7 @@ words:
   - solardata
   - solaredge
   - updatefile
+  - winsyslog
   # variable names, mostly of the utilities
   - addrs
   - baudrate
