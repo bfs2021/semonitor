@@ -306,7 +306,7 @@ def next_nadir_epoch(nadir, now=None):
     return target if target > now else at(today.tm_mday + 1)
 
 
-if __name__ == "__main__":
+def main(argv=None):
     # create the state variables with timestamps
     state = {}
     se.logutils.setState(state, "readThread", False)
@@ -316,7 +316,7 @@ if __name__ == "__main__":
     se.logutils.setState(state, "masterEvent", False)
 
     # get the command line arguments and run mode
-    (args, mode) = se.env.getArgs()
+    (args, mode) = se.env.getArgs(argv)
 
     # do not read, and so not write, data with a time that is not valid yet
     if mode.serialDevice:
@@ -379,3 +379,7 @@ if __name__ == "__main__":
     # cleanup
     se.files.closeData(dataFile)
     se.files.closeOutFiles(recFile, outFile)
+
+
+if __name__ == "__main__":
+    main()

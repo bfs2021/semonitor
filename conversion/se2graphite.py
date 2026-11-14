@@ -27,25 +27,27 @@ def log(*args):
     syslog.syslog(message)
 
 
-# parameter defaults
-base = ""
-hostName = "localhost"
-port = 2003
-devices = ["inverters", "optimizers"]
-delay = 0.1
+def main(argv=None):
+    # parameter defaults
+    base = ""
+    hostName = "localhost"
+    port = 2003
+    devices = ["inverters", "optimizers"]
+    delay = 0.1
 
-# get program arguments and options
-(opts, args) = getopt.getopt(sys.argv[1:], "b:h:p:")
-inFile = open_input(args)
-for opt in opts:
-    if opt[0] == "-b":
-        base = opt[1] + "."
-    if opt[0] == "-h":
-        hostName = opt[1]
-    if opt[0] == "-p":
-        port = int(opt[1])
+    # get program arguments and options
+    (opts, args) = getopt.getopt(
+        sys.argv[1:] if argv is None else argv, "b:h:p:"
+    )
+    inFile = open_input(args)
+    for opt in opts:
+        if opt[0] == "-b":
+            base = opt[1] + "."
+        if opt[0] == "-h":
+            hostName = opt[1]
+        if opt[0] == "-p":
+            port = int(opt[1])
 
-if __name__ == "__main__":
     graphiteSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     graphiteSocket.connect((hostName, port))
     with inFile:
@@ -103,3 +105,7 @@ if __name__ == "__main__":
                             pass
             jsonStr = inFile.readline()
     graphiteSocket.close()
+
+
+if __name__ == "__main__":
+    main()
