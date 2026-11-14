@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 
+import se.clock
 import se.commands
 import se.data
 import se.env
@@ -316,6 +317,13 @@ if __name__ == "__main__":
 
     # get the command line arguments and run mode
     (args, mode) = se.env.getArgs()
+
+    # do not read, and so not write, data with a time that is not valid yet
+    if mode.serialDevice:
+        try:
+            se.clock.waitForValidTime()
+        except se.clock.ClockError as ex:
+            terminate(1, str(ex))
 
     # calculate the nadir once, only when enabled
     nadir_epoch = None
