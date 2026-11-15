@@ -128,7 +128,7 @@ class Metrics(list):
     def sendText(self, graphiteSocket):
         for fullName, (timeStamp, value) in self:
             metric = f"{fullName} {value} {timeStamp}\n"
-            graphiteSocket.send(metric)
+            graphiteSocket.send(metric.encode())
             time.sleep(textDelay)
 
 
