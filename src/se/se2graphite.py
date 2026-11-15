@@ -162,13 +162,28 @@ def main(argv=None):
     if port is None:
         port = 2003 if text else 2004
 
-    if not text:
-        # Timeout if no connection after 10 seconds,
-        #   in which case check that Graphite is running, and the hostName and port are correct.
-        socket.setdefaulttimeout(10.0)
+    # Timeout if no connection after 10 seconds,
+    #   in which case check that Graphite is running, and the hostName and port are correct.
+    socket.setdefaulttimeout(10.0)
     graphiteSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     graphiteSocket.connect((hostName, port))
     with inFile:
+       jsonStr = getJsonStr(inFile, following)
+       while jsonStr != "":
+           try:
+               metrics = Metrics(json.loads(jsonStr), base=base)
+               if text:
+                   metrics.sendText(graphiteSocket)
+               else:
+                   metrics.sendPickle(graphiteSocket)
+           except ValueError:
+               log(
+                   "WARNING json.loads had a problem with the following jsonStr\n",
+                   jsonStr,
+                   "\n",
+                   "=" * 80,
+                   "\n",
+               )
         jsonStr = getJsonStr(inFile, following)
         while jsonStr != "":
             if text:
