@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Send JSON performance data to Mosquitto MQTT broker
 #
 # -c Mosquitto client ID
@@ -24,7 +22,8 @@ import sys
 import time
 
 import paho.mqtt.client as mqtt
-from common import open_input
+
+from se.metrics import open_input
 
 
 def main(argv=None):

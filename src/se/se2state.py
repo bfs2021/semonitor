@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Maintain a file containing the current state and selected statistics
 # of SolarEdge inverters and optimizers
 
@@ -8,7 +6,7 @@ import json
 import sys
 import time
 
-from common import open_input
+from se.metrics import open_input
 
 
 # return the sum of the specified attribute of the items in the specified dictionary

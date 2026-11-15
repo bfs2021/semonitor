@@ -35,13 +35,6 @@ def no_waiting(monkeypatch):
     monkeypatch.setattr(time, "sleep", lambda _seconds: None)
 
 
-@pytest.fixture(autouse=True)
-def conversion_on_the_path(monkeypatch):
-    # A script finds its common.py next to itself, runpy does not add that.
-    monkeypatch.syspath_prepend(str(CONVERSION))
-    monkeypatch.delitem(sys.modules, "common", raising=False)
-
-
 def run_se2state(monkeypatch, lines, *args):
     monkeypatch.setattr(sys, "argv", [str(SCRIPT), *map(str, args)])
     monkeypatch.setattr(sys, "stdin", Input(lines))

@@ -67,7 +67,7 @@ def env(monkeypatch):
 
 
 def run_se2graphite(monkeypatch, *args, stdin=""):
-    monkeypatch.setattr(sys, "argv", [str(SCRIPT), *map(str, args)])
+    monkeypatch.setattr(sys, "argv", [str(SCRIPT), "-t", *map(str, args)])
     monkeypatch.setattr(sys, "stdin", io.StringIO(stdin))
     runpy.run_path(str(SCRIPT), run_name="__main__")
     (connection,) = FakeSocket.instances
