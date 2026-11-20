@@ -75,7 +75,7 @@ def next_free_file_name(file_name):
 
 
 def close_out_files(rec_file, out_file):
-    """Close the record and output files, logging the name of each one closed."""
+    """Close the record and output files, logging the name of each closed."""
     if rec_file:
         logger.info("closing %s", rec_file.name)
         rec_file.close()

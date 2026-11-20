@@ -6,19 +6,18 @@ ARG PYTHON_VERSION="3-alpine"
 
 FROM index.docker.io/library/python:${PYTHON_VERSION} AS builder
 
-RUN apk add --no-cache 'git'
-
 WORKDIR /src/
 
 COPY . /src/
 
-RUN SETUPTOOLS_SCM_PRETEND_VERSION="${VERSION}" pip --no-cache-dir wheel --no-deps --wheel-dir '/wheels' /src
+RUN apk add --no-cache 'git' \
+    && pip --no-cache-dir install --prefix '/install' '/src[all]'
 
 
 FROM index.docker.io/library/python:${PYTHON_VERSION}
 
-RUN apk add --no-cache 'moreutils' 'tzdata' && \
-    install -d -m 0775 '/usr/local/src' && \
+RUN apk add --no-cache 'moreutils' 'tzdata' \
+    && install -d -m 0775 '/usr/local/src' && \
     addgroup -S 'semonitor' && \
     adduser -D -G 'semonitor' -h '/usr/local/src/semonitor' -s '/bin/nologin' -S 'semonitor' && \
     adduser 'semonitor' 'dialout' && \
@@ -30,8 +29,7 @@ WORKDIR /usr/local/src/semonitor/
 
 COPY --chmod=0755 packaging/container/entrypoint.sh /init
 
-RUN --mount=type=bind,from=builder,source=/wheels,target=/wheels \
-    pip --no-cache-dir install /wheels/*.whl
+COPY --from=builder /install /usr/local
 
 USER semonitor
 

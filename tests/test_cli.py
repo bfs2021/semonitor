@@ -1,6 +1,8 @@
 import json
 
-from se import se2csv, se2json, seprint
+import pytest
+
+from se import se2csv, se2hass, se2json, seprint
 
 DEVICE = {
     "Date": "2020-01-01",
@@ -68,3 +70,39 @@ def test_se2json_main_defaults_to_the_arguments_of_the_process(
     se2json.main()
 
     assert capsys.readouterr().out == "[null]\n"
+
+
+# --key without --cert is a usage error that is found before main() opens
+# anything, so these tests do not open sockets.
+def test_se2hass_main_uses_the_arguments_it_is_given(monkeypatch, capsys):
+    monkeypatch.setattr("sys.argv", ["se2hass", "--no-such-option"])
+
+    with pytest.raises(SystemExit) as exit_:
+        se2hass.main(["--key", "key.pem"])
+
+    assert exit_.value.code == 2
+    assert "--key needs --cert" in capsys.readouterr().err
+
+
+def test_se2hass_main_defaults_to_the_arguments_of_the_process(
+    monkeypatch, capsys
+):
+    monkeypatch.setattr("sys.argv", ["se2hass", "--key", "key.pem"])
+
+    with pytest.raises(SystemExit) as exit_:
+        se2hass.main()
+
+    assert exit_.value.code == 2
+    assert "--key needs --cert" in capsys.readouterr().err
+
+
+def test_se2hass_main_prints_the_help_of_the_arguments_it_is_given(
+    monkeypatch, capsys
+):
+    monkeypatch.setattr("sys.argv", ["se2hass", "--no-such-option"])
+
+    with pytest.raises(SystemExit) as exit_:
+        se2hass.main(["-h"])
+
+    assert exit_.value.code == 0
+    assert "--state-file" in capsys.readouterr().out

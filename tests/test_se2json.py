@@ -37,7 +37,7 @@ def inverter(**extra):
     return {"Date": "2016-01-01", "ID": "I1", "Time": "12:00:00", **extra}
 
 
-# --- the values ----------------------------------------------------------------
+# --- the values ---------------------------------------------------------------
 
 
 @pytest.mark.parametrize("constant", ["NaN", "Infinity", "-Infinity"])
@@ -98,7 +98,7 @@ def test_the_order_of_the_keys_is_kept(monkeypatch, capsys):
     assert out == '{"b": 1, "a": null, "c": {"z": 1, "y": 2}}\n'
 
 
-# --- the lines -----------------------------------------------------------------
+# --- the lines ----------------------------------------------------------------
 
 
 def test_every_line_is_converted_on_its_own(monkeypatch, capsys):
@@ -155,7 +155,7 @@ def test_each_line_is_flushed_for_whoever_waits_for_it(monkeypatch):
     assert stdout.flushed == ["[1]\n", "[1]\n[null]\n"]
 
 
-# --- failures ------------------------------------------------------------------
+# --- failures -----------------------------------------------------------------
 
 
 def test_a_line_that_is_not_json_is_an_error_with_its_number(
@@ -176,7 +176,7 @@ def test_a_number_that_is_too_large_is_an_error(monkeypatch, capsys):
     assert ": line 1: " in err
 
 
-# --- command line --------------------------------------------------------------
+# --- command line -------------------------------------------------------------
 
 
 def test_the_input_is_read_from_the_file_it_is_given(
@@ -207,7 +207,7 @@ def test_help_describes_the_tool(monkeypatch, capsys):
     assert "infile" in out
 
 
-# --- the output of semonitor ---------------------------------------------------
+# --- the output of semonitor --------------------------------------------------
 
 
 def test_the_golden_output_comes_out_as_valid_json(

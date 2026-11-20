@@ -95,7 +95,7 @@ def parse_data(function, data):
 
 
 def parse_energy_stats(data):
-    """Decode the energy statistics: energy today, this month, this year, total, and time."""
+    """Decode energy statistics: today, month, year, total energy, and time."""
     (eday, emon, eyear, etot, time1) = struct.unpack("<ffffL", data[0:20])
     return {
         "Eday": eday,
@@ -213,7 +213,8 @@ def parse_device_data(data):
     inv_dict = {}
     opt_dict = {}
     event_dict = {}
-    # Add a master dictionary, to store anything parsed by ParseDevice, indexed by the `devType`
+    # Add a master dictionary, to store anything parsed by ParseDevice, indexed
+    # by the `devType`
     devs_dict = {}
 
     data_ptr = 0
@@ -250,9 +251,11 @@ def parse_device_data(data):
             inv_dict[se_id] = parse_inv_data(
                 se_id, INV_ITEMS, data[data_ptr : data_ptr + dev_len]
             )
-            # Correct odd case where SolarEdge inverter sends NaN value in opposite byte order to all other float values
-            # i.e. SolarEdge sends b'\xff\xff\x7f\xff' which in little endian format unpacks as -3.402... * 10 ** 38
-            # but b'\xff\x7f\xff\xff' unpacks as NaN, which is the "correct" value when this byte pattern is seen.
+            # Correct odd case where SolarEdge inverter sends NaN value in
+            # opposite byte order to all other float values i.e. SolarEdge sends
+            # b'\xff\xff\x7f\xff' which in little endian format unpacks as
+            # -3.402... * 10 ** 38 but b'\xff\x7f\xff\xff' unpacks as NaN, which
+            # is the "correct" value when this byte pattern is seen.
             if inv_dict[se_id]["Pmax"] < -3 * 10**38:
                 inv_dict[se_id]["Pmax"] = float("nan")
             log_device(
@@ -273,8 +276,9 @@ def parse_device_data(data):
                 "event:         ", se_type, se_id, dev_len, event_dict[se_id]
             )
         else:  # unknown device type, or one that ParseDevice can handle
-            # In production you would usually set explorer to False, to prevent excessively long (and mostly useless)
-            # parse results for unknown device types.
+            # In production you would usually set explorer to False, to prevent
+            # excessively long (and mostly useless) parse results for unknown
+            # device types.
             parsed_device = ParseDevice(
                 data[data_ptr - dev_hdr_len : data_ptr + dev_len],
                 explorer=False,
@@ -291,7 +295,8 @@ def parse_device_data(data):
             )
 
         data_ptr += dev_len
-    # A bit of a lazy way out, but embed the pre-existing dictionaries into devsDict
+    # A bit of a lazy way out, but embed the pre-existing dictionaries into
+    # devsDict
     devs_dict["inverters"] = inv_dict
     devs_dict["optimizers"] = opt_dict
     devs_dict["events"] = event_dict
@@ -378,7 +383,7 @@ def parse_new_opt_data(se_id, opt_items, dev_data):
 
 
 def parse_s440_opt_data(se_id, opt_items, dev_data):
-    """Decode the data of an S440 optimizer, which has no energy or temperature."""
+    """Decode S440 optimizer data, which has no energy or temperature."""
     data = bytearray()
     data.extend(dev_data)
     (time_stamp, uptime) = struct.unpack("<LH", dev_data[0:6])

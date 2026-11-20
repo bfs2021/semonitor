@@ -107,7 +107,10 @@ extend-select = [
     "C4",   # flake8-comprehensions
     "C90",  # mccabe
     "D",    # pydocstyle
-    "D213", # multi-line-summary-second-line, off by default in the google convention
+    "D213", # multi-line-summary-second-line
+    "D401", # non-imperative-mood
+    "D402", # signature-in-docstring
+    "D403", # first-word-uncapitalized
     "DTZ",  # flake8-datetimez
     "E",    # pycodestyle errors
     "EM",   # flake8-errmsg
@@ -151,6 +154,7 @@ combine-as-imports = true
 [tool.ruff.lint.pycodestyle]
 # The formatter wraps at 80; E501 only flags lines beyond 120.
 max-line-length = 120
+max-doc-length = 80
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

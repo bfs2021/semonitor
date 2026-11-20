@@ -19,7 +19,8 @@ Example:
 
     Or pipe the output of semonitor directly into se2MQTT.py::
 
-        python3 semonitor.py -t 4 -d /root/solaredge/selog.txt -s 7f123456 -vvvv \\
+        python3 semonitor.py -t 4 -d /root/solaredge/selog.txt -s 7f123456 \\
+            -vvvv \\
             /dev/ttyUSB0 | \\
             python3 se2MQTT.py -c solaredge -u solaredge -p s0lar3dg3 \\
             -s mosquitto.domain.local -t /ha/value/solaredge
@@ -55,7 +56,8 @@ def main(argv=None):
     Publish the performance data read from the input to MQTT, forever.
 
     Args:
-        argv: The command line arguments to use, or None for those of the process.
+        argv: The command line arguments to use, or None for those of the
+            process.
     """
     # state values
     state_dict = {"inverters": {}, "optimizers": {}}

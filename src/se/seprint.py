@@ -9,17 +9,20 @@ def open_input(args):
     """
     Open the input.
 
-    The input is the file named by the first argument, or stdin when there is none. A file that was asked for but
-    cannot be opened is an error, it must not silently turn into reading stdin.
+    The input is the file named by the first argument, or stdin when there is
+    none. A file that was asked for but cannot be opened is an error, it must
+    not silently turn into reading stdin.
 
     Args:
-        args: The positional command line arguments. The first one, if there is one, names the input file.
+        args: The positional command line arguments. The first one, if there is
+            one, names the input file.
 
     Returns:
         The open input file, or sys.stdin when there is no argument.
 
     Raises:
-        SystemExit: If the named file cannot be opened, with the error written to stderr and exit status 1.
+        SystemExit: If the named file cannot be opened, with the error written
+            to stderr and exit status 1.
     """
     if not args:
         return sys.stdin
@@ -34,8 +37,8 @@ def main(argv=None):
     Print the data of the input with the given arguments.
 
     Args:
-        argv: The command line arguments, without the program name. The arguments of the process are used when
-            this is None.
+        argv: The command line arguments, without the program name. The
+            arguments of the process are used when this is None.
     """
     args = sys.argv[1:] if argv is None else argv
     # get program arguments and options

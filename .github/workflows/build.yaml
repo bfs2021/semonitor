@@ -85,6 +85,14 @@ jobs:
             ${{ env.TEST_TAG }} \
             './test/test.sh'
 
+      - name: Test installation
+        run: >
+          docker container run \
+            --rm \
+            --volume "$(pwd)/test:/usr/local/src/semonitor/test" \
+            ${{ env.TEST_TAG }} \
+            './test/test-install.sh'
+
       - name: Image reference
         id: image
         env:

@@ -26,7 +26,7 @@ def messages(caplog):
     return logged
 
 
-# --- open_in_file --------------------------------------------------------------
+# --- open_in_file -------------------------------------------------------------
 
 
 def test_open_in_file_stdin_gives_the_binary_stdin_buffer(monkeypatch):
@@ -106,7 +106,7 @@ def test_close_data_flushes_a_written_file(workdir):
     assert path.read_bytes() == b"buffered"
 
 
-# --- open_out_file -------------------------------------------------------------
+# --- open_out_file ------------------------------------------------------------
 
 
 @pytest.mark.parametrize("name", [None, ""])
@@ -420,7 +420,7 @@ def test_open_out_file_parent_that_is_a_file_raises(workdir):
     assert [path.name for path in workdir.iterdir()] == ["a"]
 
 
-# --- next_free_file_name --------------------------------------------------------
+# --- next_free_file_name ------------------------------------------------------
 
 
 def test_next_free_file_name_returns_an_unused_name_unchanged():

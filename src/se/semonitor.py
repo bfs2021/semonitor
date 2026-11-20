@@ -119,7 +119,8 @@ def process_msg(msg, args, mode, state, files):
                     msg_seq, to_addr, from_addr, reply_function, reply_data
                 )
                 se.msg.send_msg(files.data, msg, files.rec)
-        # the data is written and acknowledged, so the end-of-day event can end the run
+        # the data is written and acknowledged, so the end-of-day event can end
+        # the run
         if (
             args.nadir == se.env.NADIR_EVENT
             and function == se.commands.PROT_CMD_SERVER_POST_DATA

@@ -20,7 +20,8 @@ def main(argv=None):
     Write a CSV file per device type from the JSON performance data read.
 
     Args:
-        argv: The command line arguments to use, or None for those of the process.
+        argv: The command line arguments to use, or None for those of the
+            process.
     """
     parser = argparse.ArgumentParser(
         description=(

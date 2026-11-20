@@ -655,25 +655,31 @@ packages:
 #### Options
 
 ```text
-    -b, --bind address
+    -i, --interface address
                     Address to listen on for the pairing requests, and to
                     announce. (default: all interfaces)
     -p, --port port
-                    Port to listen on. (default: 22222)
+                    Port to listen on, 0 for any free one. (default: 22222)
     -f, --state-file file
                     File that keeps the pairing and the pairing code.
                     (default: /var/lib/semonitor/se2hass.json)
-    --cert file     Certificate (PEM) to serve the pairing API with HTTPS.
+    -c, --cert file
+                    Certificate (PEM) to serve the pairing API with HTTPS.
                     Without it, the API uses plain HTTP.
-    --key file      Private key (PEM) of the certificate. Needs --cert.
-    --cafile file   CA certificates (PEM) to verify the certificate of Home
-                    Assistant with, for one with a private CA. (default: the
-                    system CAs)
-    --insecure      Do not verify the certificate of Home Assistant. (default:
+    -k, --key file  Private key (PEM) of the certificate. Needs --cert.
+    -I, --insecure  Do not verify the certificate of Home Assistant. (default:
                     off)
-    -v              Show debug messages. The default is to show messages from
+    -H, --hostname name
+                    Name of this host in mDNS, only the name, like `solar`,
+                    never a domain name. `.local` is added. (default: what
+                    `hostname` prints)
+    -v, --verbose   Show debug messages. The default is to show messages from
                     INFO on.
+    -h, --help      Show the help.
 ```
+
+The certificate of Home Assistant is checked with the certificates of the
+system, which is enough for one from a public authority such as Let's Encrypt.
 
 The `semonitor` output is read from stdin, or from `inFile`, and is not changed
 in any way, except that `NaN` becomes `null` as in `se2json`. A line that is
@@ -749,6 +755,12 @@ performance data to the file `yyyymmdd.json`, and push it to Home Assistant.
 ```
 
 The same, with the pairing API served over HTTPS.
+
+```sh
+    semonitor -t 4 /dev/ttyUSB0 | se2hass -i 192.168.1.10 -H solar
+```
+
+The same, listening on one address only, and announced as `solar.local`.
 
 
 ### se2graphite

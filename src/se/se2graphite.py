@@ -47,11 +47,13 @@ def log(*args):
     message = args[0] + " "
     for arg in args[1:]:
         message += arg.__str__() + " "
-    # TODO: Make this align better with the multiple logging options available elsewhere in semonitor
+    # TODO: Make this align better with the multiple logging options available
+    # elsewhere in semonitor
     syslog.syslog(message)
 
 
-# Time to wait, in seconds, after sending a batch (or for more data when following).
+# Time to wait, in seconds, after sending a batch (or for more data when
+# following).
 delay = 0.2
 # Time to wait, in seconds, after sending a single metric as text.
 text_delay = 0.1
@@ -61,7 +63,8 @@ def get_json_str(in_file, following):
     """
     Read the next line of JSON from the input.
 
-    If following is True, wait (sleeping for delay seconds between tries) until a line arrives.
+    If following is True, wait (sleeping for delay seconds between tries) until
+    a line arrives.
 
     Args:
         in_file: The open input file to read from.
@@ -81,10 +84,11 @@ def get_json_str(in_file, following):
 
 class Metrics(list):
     """
-    Convert a nested dictionary of metrics into the list of tuples Graphite needs.
+    Convert a nested metrics dictionary into the list of tuples Graphite needs.
 
-    The list of tuples is in the format expected by the Graphite (carbon) pickle interface, and is sent to carbon,
-    either as a batch to its pickle listener port, or as a line of text for each metric to its text listener port.
+    The list of tuples is in the format expected by the Graphite (carbon) pickle
+    interface, and is sent to carbon, either as a batch to its pickle listener
+    port, or as a line of text for each metric to its text listener port.
     """
 
     def __init__(self, metrics_dict, base):
@@ -92,7 +96,8 @@ class Metrics(list):
         Build the list of (name, (timestamp, value)) tuples from metrics_dict.
 
         Args:
-            metrics_dict: A nested dictionary of devices and their attributes, as produced by json.loads.
+            metrics_dict: A nested dictionary of devices and their attributes,
+                as produced by json.loads.
             base: A prefix to put in front of every metric name.
         """
         for base_name, dev_attrs in unwrap_metrics_dict(metrics_dict):
@@ -105,8 +110,10 @@ class Metrics(list):
                     "Date or Time is missing or incorrectly formatted for this set of metrics"
                 )
                 (year, month, day, hour, minute, second) = (1970, 1, 1, 0, 1, 1)
-            # Set the dst parameter in mktime to -1, so that the system determines whether dst is in effect!
-            # Without this, when dst is in effect, the timeStamp is 3600 seconds into the future!
+            # Set the dst parameter in mktime to -1, so that the system
+            # determines whether dst is in effect!
+            # Without this, when dst is in effect, the timeStamp is 3600 seconds
+            # into the future!
             time_stamp = time.mktime(
                 (
                     int(year),
@@ -124,15 +131,16 @@ class Metrics(list):
             for dev_attr in dev_attrs:
                 if dev_attr not in {"Date", "Time", "Undeciphered_data"}:
                     try:
-                        # Weed out attributes with non numeric values (Graphite does this too, but why clog the
-                        # network?)
+                        # Weed out attributes with non numeric values (Graphite
+                        # does this too, but why clog the network?)
                         test = float(dev_attrs[dev_attr])
                         if math.isnan(test):
                             # It's a NaN!
                             pass
                         else:
                             full_name = f"{base}{base_name}.{dev_attr}"
-                            # A nested tuple as per the expectations of the pickle Graphite interface
+                            # A nested tuple as per the expectations of the
+                            # pickle Graphite interface
                             self.append(
                                 (
                                     full_name,
@@ -147,8 +155,9 @@ class Metrics(list):
         """
         Pickle the metrics and send them to the Graphite socket.
 
-        Only the list items are pickled, so that the non list attributes of self do not upset carbon.
-        A short delay follows each send so that carbon is not swamped.
+        Only the list items are pickled, so that the non list attributes of self
+        do not upset carbon. A short delay follows each send so that carbon is
+        not swamped.
 
         Args:
             graphite_socket: A connected socket to the carbon pickle listener.
@@ -223,12 +232,14 @@ def main(argv=None):
     Send the metrics read from the input to Graphite.
 
     Args:
-        argv: The command line arguments to use, or None for those of the process.
+        argv: The command line arguments to use, or None for those of the
+            process.
     """
     options = parse_options(sys.argv[1:] if argv is None else argv)
 
     # Timeout if no connection after 10 seconds,
-    #   in which case check that Graphite is running, and the host name and port are correct.
+    #   in which case check that Graphite is running, and the host name and
+    #   port are correct.
     socket.setdefaulttimeout(10.0)
     graphite_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     graphite_socket.connect((options.host_name, options.port))

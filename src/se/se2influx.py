@@ -52,11 +52,11 @@ class LogParams:
 
 
 class DateError(Exception):
-    """Raised when the date and time of a semonitor message cannot be converted."""
+    """Raised when a semonitor message's date and time cannot be converted."""
 
 
 class Se2Influx:
-    """Read semonitor data from stdin and write it to InfluxDB and a log file."""
+    """Read semonitor data from stdin, write it to InfluxDB and a log file."""
 
     def __init__(
         self,
@@ -212,7 +212,7 @@ class Se2Influx:
                 logger.exception("Error writing to influx db")
 
     def _create_database(self, db_client) -> bool:
-        """Create the database if it doesn't exist, and return if it is there."""
+        """Create the database if it doesn't exist, and return if it exists."""
         try:
             available_dbs = [db["name"] for db in db_client.get_list_database()]
             if self.influx_params.database not in available_dbs:

@@ -132,8 +132,8 @@ def main(argv=None):
     Maintain the state file with the given arguments.
 
     Args:
-        argv: The command line arguments, without the program name. The arguments of the process are used when
-            this is None.
+        argv: The command line arguments, without the program name. The
+            arguments of the process are used when this is None.
     """
     initialize = False
 

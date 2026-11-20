@@ -115,9 +115,10 @@ INV_OUT_FMT = [
 #   12  freq1: frequency (Hz)
 #   13  freq2: frequency (Hz)
 #   14  freq3: frequency (Hz)
-#   15  EdayDC: Same as Eday, but measured at DC side. Obfuscated by SE because it would directly reveal inverter
-#       efficiency.
-#   16  Edc: Same as Eac, but measured at DC side. Obfuscated by SE just like EdayDC.
+#   15  EdayDC: Same as Eday, but measured at DC side. Obfuscated by SE because
+#       it would directly reveal inverter efficiency.
+#   16  Edc: Same as Eac, but measured at DC side. Obfuscated by SE just like
+#       EdayDC.
 #   17  Vdc: DC volts
 #   18  Idc: Same as Iac, but at DC side. Obfuscated by SE.
 #   19  Etot: total energy produced (Wh)
@@ -128,7 +129,8 @@ INV_OUT_FMT = [
 #   24  CosPhi1: cos φ, phase 1
 #   25  CosPhi2: cos φ, phase 2
 #   26  CosPhi3: cos φ, phase 3
-#   27  mode: Mode (1=OFF, 2=SLEEPING, 3=STARTING, 4=MPPT, 6=SHUTTING_DOWN, 8=STANDBY)
+#   27  mode: Mode (1=OFF, 2=SLEEPING, 3=STARTING, 4=MPPT, 6=SHUTTING_DOWN,
+#       8=STANDBY)
 #   28  GndFrR: Ground Fault Resistance, a float value
 #   29  data29: Is this Power Limit in percent? Always 100 or 0
 #   30  IoutDC: This is what SolarEdge calls it.

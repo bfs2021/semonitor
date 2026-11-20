@@ -6,7 +6,8 @@ dumps the raw data.
 
 Usage:
   python se2hex.py logFile [dataFile]
-      logFile     file containing semonitor.py debug output created with the -vvvv option
+      logFile     file containing semonitor.py debug output created with the
+                  -vvvv option
       dataFile    file to write data to (default: stdout)
 """
 

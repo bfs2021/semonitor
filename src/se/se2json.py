@@ -38,7 +38,8 @@ def main(argv=None):
     Write the JSON read as valid JSON.
 
     Args:
-        argv: The command line arguments to use, or None for those of the process.
+        argv: The command line arguments to use, or None for those of the
+            process.
     """
     parser = argparse.ArgumentParser(
         description=(

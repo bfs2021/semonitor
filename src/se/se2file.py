@@ -47,8 +47,9 @@ def main(argv=None):
     # parse the command line arguments
     args = getargs(argv)
 
-    # Since we want to work on files and stdin. We will count the number of lines that are blank. If we process 10 blank
-    # lines and we are not doing stdin, we will assume that the file is done
+    # Since we want to work on files and stdin. We will count the number of
+    # lines that are blank. If we process 10 blank lines and we are not doing
+    # stdin, we will assume that the file is done
     blank_max = 10
     debug = args.debug
     openfilesecs = int(args.openfilesecs)
@@ -58,7 +59,8 @@ def main(argv=None):
         in_file = _open_input(args, files)
 
         lastwrite = 0
-        # read the input forever or until we have 10 blank lines in the case of file as input
+        # read the input forever or until we have 10 blank lines in the case of
+        # file as input
         writefilename = ""
         json_str = ""
         lcnt = 0
@@ -94,12 +96,14 @@ def main(argv=None):
             else:
                 blank_cnt += 1
                 time.sleep(0.5)
-            # Let's not leave output files open if we haven't seen data in a while
+            # Let's not leave output files open if we haven't seen data in a
+            # while
             if debug and curepoch - lastwrite > openfilesecs:
                 sys.stderr.write(
                     f"No data for {openfilesecs} seconds, closing file\n"
                 )
-            # Keep track of when we are looping and report on it if debug is enabled.
+            # Keep track of when we are looping and report on it if debug is
+            # enabled.
             lreport = 60
             if lcnt % lreport == 0:
                 lcnt = 0

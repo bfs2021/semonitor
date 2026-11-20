@@ -21,10 +21,12 @@ logger = logging.getLogger(__name__)
 
 # local time of day for the daily exit when -n is given 'default'
 NADIR_DEFAULT = dt.time(1, 40)
-# nadir given as 'event': exit on the inverter's end-of-day event instead of a time
+# nadir given as 'event': exit on the inverter's end-of-day event instead of a
+# time
 NADIR_EVENT = "event"
 
-# run environment that is derived from the arguments that defines how the program will behave
+# run environment that is derived from the arguments that defines how the
+# program will behave
 RunMode = namedtuple(
     "RunMode",
     (
@@ -41,7 +43,7 @@ class SeArgumentParser(argparse.ArgumentParser):
     """Argument parser that prints its usage and exits on errors."""
 
     def error(self, message):
-        """Print the usage, write the message to stderr and exit with status 2."""
+        """Print usage, write the message to stderr and exit with status 2."""
         self.print_usage()
         sys.stderr.write(message + "\n")
         sys.exit(2)

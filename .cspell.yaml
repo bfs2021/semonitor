@@ -68,6 +68,7 @@ words:
   - tshark
   - wireshark
   # tools and distribution packaging
+  - addext
   - addopts
   - adduser
   - codespell
@@ -79,11 +80,15 @@ words:
   - fromdateiso
   - htmlcov
   - junitxml
+  - keyout
   - moreutils
+  - newkey
   - nofile
   - nologin
   - numprocesses
+  - paramgen
   - perflint
+  - pkeyopt
   - pygrep
   - pyupgrade
   - refurb
@@ -110,6 +115,7 @@ words:
   - mday
   - mktime
   - setdefaulttimeout
+  - surrogatepass
   - sockaddr
   - ttyname
   - tzset
@@ -131,8 +137,8 @@ words:
   - solaredge
   - winsyslog
   # variable names, mostly of the utilities
+  - abcdefghjk
   - addrs
-  - advertisable
   - baudrate
   - cafile
   - clientid
@@ -147,6 +153,7 @@ words:
   - derivn
   - devlen
   - eofs
+  - fghjk
   - filebuffersize
   - lastwrite
   - lcnt

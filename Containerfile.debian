@@ -19,7 +19,7 @@ WORKDIR /src/
 
 COPY . /src/
 
-RUN SETUPTOOLS_SCM_PRETEND_VERSION="${VERSION}" pip --no-cache-dir wheel --no-deps --wheel-dir '/wheels' /src
+RUN SETUPTOOLS_SCM_PRETEND_VERSION="${VERSION}" pip --no-cache-dir install --prefix '/install' '/src[all]'
 
 
 FROM index.docker.io/library/python:${PYTHON_VERSION}
@@ -39,8 +39,7 @@ WORKDIR /usr/local/src/semonitor/
 
 COPY --chmod=0755 packaging/container/entrypoint.sh /init
 
-RUN --mount=type=bind,from=builder,source=/wheels,target=/wheels \
-    pip --no-cache-dir install /wheels/*.whl
+COPY --from=builder /install /usr/local
 
 USER semonitor
 

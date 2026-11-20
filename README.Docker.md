@@ -46,6 +46,21 @@ docker container run \
     './test/test.sh'
 ```
 
+A second test checks that the image is complete: that every dependency,
+including those of the extras, is installed and that every command loads. A
+build succeeds without them, as the extras are only installed when asked for,
+and `test.sh` only runs `semonitor`.
+
+```sh
+docker container run \
+    --interactive \
+    --rm \
+    --tty \
+    --volume "$(pwd)/test:/usr/local/src/semonitor/test" \
+    'semonitor:ISSUE-123' \
+    './test/test-install.sh'
+```
+
 
 ## Running serial device
 
@@ -176,7 +191,7 @@ services:
   `/var/lib/semonitor/se2hass.json`, on the volume that `semonitor` uses, so
   they survive a restart of the container.
 * **Interfaces:** with the host network, the addresses of `docker0` and of the
-  `veth` interfaces can end up in the announcement. Use `-b` with the address
+  `veth` interfaces can end up in the announcement. Use `-i` with the address
   of the host to announce that one only.
 
 The pairing code is logged at every start. Find it with

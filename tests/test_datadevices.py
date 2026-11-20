@@ -338,8 +338,8 @@ def comparable(device):
     }
 
 
-# Parsing changes the class level tables (a longer record adds to field_defs, the
-# explorer adds item names), so every test gets pristine copies.
+# Parsing changes the class level tables (a longer record adds to field_defs,
+# the explorer adds item names), so every test gets pristine copies.
 @pytest.fixture(autouse=True)
 def isolate_class_state(monkeypatch):
     for cls in (ParseDevice0x0022, ParseDevice0x0030, ParseDeviceExplorer):
